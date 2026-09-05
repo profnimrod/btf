@@ -1,0 +1,12 @@
+# Minimal set to run the tests and every --plan mode on a laptop (no GPU).
+numpy==2.4.4
+pyyaml==6.0.2
+tokenizers==0.22.1
+datasketch==1.6.5
+cryptography==43.0.3
+faiss-cpu==1.9.0
+rank-bm25==0.2.2
+scikit-learn==1.5.2
+pypdf==5.1.0
+pytest==8.3.4
+torch==2.13.0

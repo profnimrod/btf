@@ -1,0 +1,25 @@
+# Laboratory configuration: small enough to run on a laptop CPU, large
+# enough to show every mechanism in Labs B-E. The 125M reference config
+# (train/cfg-125m.yaml) is the GPU-scale version of this same file.
+model:
+  vocab: 1400
+  d_model: 128
+  n_layers: 4
+  n_heads: 4
+  n_kv_heads: 2
+  d_head: 32
+  d_ff: 512
+  rope_theta: 10000.0
+  context: 256
+  quant: none
+train:
+  tokenizer: tok/domain-32k
+  seq_len: 192
+  micro_batch: 8
+  grad_accum: 1
+  lr: 1.0e-3
+  warmup_steps: 30
+  weight_decay: 0.1
+  betas: [0.9, 0.95]
+  grad_clip: 1.0
+  seed: 1337

@@ -1,0 +1,34 @@
+# generated artifacts — every one is reproducible from a seeded script
+__pycache__/
+*.pyc
+.pytest_cache/
+ckpt/
+logs/
+run/
+soak/
+gguf/
+calib/v1/
+registry/store/
+corpus/v1/
+bundle/ops-*/
+tok/domain-32k/
+tok/general/
+tok/tiny/
+# generated datasets (data/make_synthetic.py --scale small recreates all of it)
+data/samples/
+data/qa-history.jsonl
+data/sft-v1/
+data/pref-v1/
+data/lb-prompts.jsonl
+data/pairs-*.jsonl
+data/hard-negs.json
+data/distill-v1.jsonl
+data/audit-sample.jsonl
+data/ATTESTATION-synth.json
+eval/JUDGED-v1/
+eval/pool.jsonl
+eval/reports/
+eval/domain-terms.txt
+eval/canary-prompts.jsonl
+index/*/
+!index/__init__.py

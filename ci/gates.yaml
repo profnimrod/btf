@@ -1,0 +1,17 @@
+# CI gates (App. F). The harness gates merges, mechanically.
+name: btf-ci
+on: [push, pull_request]
+jobs:
+  cpu-core:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - run: pip install -r env/requirements-cpu.txt
+      - run: python tests/env_check.py
+      - run: python -m pytest tests/test_repo.py -q      # model, checker, drills
+      - run: python tests/template_parity.py             # Ch. 11 invariant
+      - run: python tests/packing_inspect.py             # Ch. 11 invariant
+  # gpu-suites: on self-hosted CUDA runner —
+  #   eval/delta.py --gates (per-task); eval/guardrails.py --both-directions.

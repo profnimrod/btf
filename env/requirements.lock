@@ -1,0 +1,27 @@
+# Beyond the Frontier — pinned environment (snapshot: August 2026).
+# CPU-only core (labs' verifiable parts, tests, --plan modes):
+numpy==2.4.4
+pyyaml==6.0.2
+tokenizers==0.22.1
+datasketch==1.6.5
+cryptography==43.0.3
+faiss-cpu==1.9.0
+rank-bm25==0.2.2
+scikit-learn==1.5.2
+pypdf==5.1.0
+pytest==8.3.4
+# Training / adaptation / serving (require a CUDA host):
+torch==2.13.0
+transformers==5.15.1
+trl==1.10.0
+peft==0.20.0
+accelerate==1.14.0
+datasets==5.0.1
+bitsandbytes==0.50.1
+sentence-transformers==6.0.0
+vllm==0.27.1
+llmcompressor==0.13.0   # AWQ/GPTQ for 8B-class; AutoAWQ is deprecated upstream
+gptqmodel==7.3.5
+# llama.cpp is pinned by tag in env/llama_cpp.pin (immutable); build from that checkout only.
+# The lockfile is the ONLY installation source for the book environment (App. F).
+# Re-verify versions and hashes at source before adopting.
