@@ -52,8 +52,8 @@ def main():
     backbone = fresh_backbone(tok.get_vocab_size(), d=96, layers=3, heads=4,
                               kv=2, dh=24, ff=384, ctx=192)
     ce = CrossEncoder(backbone, tok)
-    pairs = [json.loads(l) for l in Path(a.pairs).read_text().splitlines() if l.strip()]
-    negs = json.loads(Path(a.hard_negs).read_text()) if a.hard_negs else {}
+    pairs = [json.loads(l) for l in Path(a.pairs).read_text(encoding='utf-8').splitlines() if l.strip()]
+    negs = json.loads(Path(a.hard_negs).read_text(encoding='utf-8')) if a.hard_negs else {}
     opt = torch.optim.AdamW(ce.parameters(), lr=a.lr)
     lossf = nn.BCEWithLogitsLoss()
     rng = np.random.default_rng(0)

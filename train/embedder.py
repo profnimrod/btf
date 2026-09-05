@@ -42,8 +42,8 @@ def main():
     else:
         enc = Encoder(fresh_backbone(tok.get_vocab_size()), tok)
         print("[embedder] fresh backbone (no LM checkpoint supplied)")
-    pairs = [json.loads(l) for l in Path(a.pairs).read_text().splitlines() if l.strip()]
-    negs = json.loads(Path(a.hard_negs).read_text()) if a.hard_negs else None
+    pairs = [json.loads(l) for l in Path(a.pairs).read_text(encoding='utf-8').splitlines() if l.strip()]
+    negs = json.loads(Path(a.hard_negs).read_text(encoding='utf-8')) if a.hard_negs else None
     print(f"[embedder] {len(pairs)} pairs"
           + (f", hard negatives for {len(negs)}" if negs else ""))
     mrl = [int(x) for x in a.mrl.split(',')] if a.mrl else None

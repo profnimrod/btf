@@ -77,10 +77,10 @@ def heartbeat(model, tok_dir: str, prompts_path: str, step: int, log: Path):
         from tokenizers import Tokenizer
         tok = Tokenizer.from_file(str(Path(tok_dir) / "tokenizer.json"))
     except Exception as e:  # pragma: no cover
-        log.open("a").write(f"[step {step}] heartbeat skipped: {e}\n")
+        log.open("a", encoding='utf-8').write(f"[step {step}] heartbeat skipped: {e}\n")
         return
     lines = []
-    for row in Path(prompts_path).read_text().splitlines():
+    for row in Path(prompts_path).read_text(encoding='utf-8').splitlines():
         if not row.strip():
             continue
         prompt = json.loads(row)["prompt"]
@@ -88,7 +88,7 @@ def heartbeat(model, tok_dir: str, prompts_path: str, step: int, log: Path):
         out = model.generate(ids, max_new=24)[0].tolist()
         lines.append(f"[step {step}] {prompt!r} -> {tok.decode(out)!r}")
     log.parent.mkdir(exist_ok=True)
-    with log.open("a") as f:
+    with log.open("a", encoding='utf-8') as f:
         f.write("\n".join(lines) + "\n")
 
 
@@ -114,7 +114,7 @@ def main(argv=None):
     ap.add_argument("--log", default="logs/train.jsonl")
     a = ap.parse_args(argv)
 
-    raw = yaml.safe_load(open(a.config))
+    raw = yaml.safe_load(open(a.config, encoding='utf-8'))
     tr = raw.get("train", {})
     cfg = ModelConfig.from_yaml(a.config)
     if a.quant:
@@ -134,7 +134,7 @@ def main(argv=None):
         from tok.encode import encode_dir
         print(f"[pretrain] train.bin absent; encoding with {tr.get('tokenizer')}")
         encode_dir(str(data_dir), tr["tokenizer"])
-    meta = json.loads((data_dir / "meta.json").read_text())
+    meta = json.loads((data_dir / "meta.json").read_text(encoding='utf-8'))
     data = np.memmap(data_dir / "train.bin", dtype=np.dtype(meta["dtype"]), mode="r")
     cfg.vocab = max(cfg.vocab, meta["vocab"])
 
@@ -171,7 +171,7 @@ def main(argv=None):
     every_kind, every_val = parse_every(a.ckpt_every)
     log_path = Path(a.log)
     log_path.parent.mkdir(exist_ok=True)
-    log = log_path.open("a")
+    log = log_path.open("a", encoding='utf-8')
     amp = a.bf16 and a.device == "cuda"
     t_last, tok_count = time.time(), 0
     print(f"[pretrain] {cfg.describe()} | {model.param_count()/1e6:.1f}M params | "

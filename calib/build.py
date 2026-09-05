@@ -19,9 +19,9 @@ def main():
     picks = rng.sample(files, min(a.n, len(files)))
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
-    with (out / "calib.jsonl").open("w") as f:
+    with (out / "calib.jsonl").open("w", encoding='utf-8') as f:
         for p in picks:
-            f.write(json.dumps({"text": " ".join(p.read_text().split()[:a.len]),
+            f.write(json.dumps({"text": " ".join(p.read_text(encoding='utf-8').split()[:a.len]),
                                 "doc_id": p.stem}) + "\n")
     (out / "ATTESTATION.json").write_text(json.dumps(
         {"mix": a.mix, "n": len(picks), "seq_len": a.len,

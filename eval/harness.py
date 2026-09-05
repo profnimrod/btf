@@ -34,13 +34,13 @@ def main():
     ap.add_argument("--out", default="eval/reports")
     a = ap.parse_args()
     m, tok = load(a.ckpt, a.tok)
-    rows = [json.loads(l) for l in Path(a.queries).read_text().splitlines() if l.strip()]
+    rows = [json.loads(l) for l in Path(a.queries).read_text(encoding='utf-8').splitlines() if l.strip()]
     hits = {s: [] for s in SUITES}
     for r in rows[:a.limit]:
         gen = answer(m, tok, r["query"], max_new=32)
         ok = 1 if norm(r["answer"])[:8] and norm(r["answer"])[:8] in norm(gen) else 0
         hits[suite_of(r["gold"])].append(ok)
-    lb = [json.loads(l) for l in Path(a.lb_prompts).read_text().splitlines() if l.strip()]
+    lb = [json.loads(l) for l in Path(a.lb_prompts).read_text(encoding='utf-8').splitlines() if l.strip()]
     for s in lb[:a.lb_limit]:
         sc = s["scenario"]
         q = (f"Recommend a MODCOD and report margin. EIRP {sc['eirp_dbw']} dBW, "
@@ -57,7 +57,7 @@ def main():
     report["per_item"] = per_item
     name = a.name or Path(a.ckpt).stem
     Path(a.out).mkdir(parents=True, exist_ok=True)
-    (Path(a.out) / f"{name}.json").write_text(json.dumps(report, indent=2))
+    (Path(a.out) / f"{name}.json").write_text(json.dumps(report, indent=2), encoding='utf-8')
     print(f"[harness] {name}: " +
           "  ".join(f"{s}={report[s]:.1f}" for s in SUITES) +
           f"  overall={report['overall']:.1f}")

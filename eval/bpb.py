@@ -43,8 +43,8 @@ def main():
     ap.add_argument("--label", default="model")
     a = ap.parse_args()
     p = Path(a.text)
-    text = "\n".join(f.read_text() for f in sorted(p.rglob("*.txt"))[:40]) \
-        if p.is_dir() else p.read_text()
+    text = "\n".join(f.read_text(encoding='utf-8') for f in sorted(p.rglob("*.txt"))[:40]) \
+        if p.is_dir() else p.read_text(encoding='utf-8')
     r = bpb(a.ckpt, a.tok, text)
     print(f"[bpb] {a.label}: {json.dumps(r)}")
 

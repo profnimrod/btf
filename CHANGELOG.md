@@ -1,3 +1,6 @@
+v1.2.2 (6 Sep 2026) - Windows compatibility
+- all text file I/O is explicitly UTF-8 (41 modules); fixes "stream did not contain valid UTF-8" from tok/train.py on Windows
+- labs/run_all.sh exports PYTHONUTF8=1 for Windows shells
 v1.2.1 (5 Sep 2026) — book v1.7 release
 - quant/merge.py --adapters sft,dpo,grpo: merge the final aligned stack (each adapter bound to its base)
 - Lab E artifact chain: QAT writes the bf16 master only (ckpt/qat-master); packing at export; the packed GGUF is what is gated

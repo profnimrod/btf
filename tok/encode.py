@@ -27,7 +27,7 @@ def encode_dir(corpus_dir: str, tok_dir: str) -> Path:
         eos = 0
     ids: list[int] = []
     for f in files:
-        ids.extend(tok.encode(f.read_text(errors="ignore")).ids)
+        ids.extend(tok.encode(f.read_text(encoding='utf-8', errors='ignore')).ids)
         ids.append(eos)
     vocab = tok.get_vocab_size()
     dtype = np.uint16 if vocab < 65536 else np.uint32
@@ -36,7 +36,7 @@ def encode_dir(corpus_dir: str, tok_dir: str) -> Path:
     arr.tofile(out)
     meta = {"tokenizer": str(tok_dir), "vocab": vocab,
             "n_tokens": int(arr.size), "dtype": str(arr.dtype)}
-    (corpus / "meta.json").write_text(json.dumps(meta, indent=2))
+    (corpus / "meta.json").write_text(json.dumps(meta, indent=2), encoding='utf-8')
     print(f"[encode] {arr.size:,} tokens -> {out}")
     return out
 

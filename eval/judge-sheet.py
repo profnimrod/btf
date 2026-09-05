@@ -25,7 +25,7 @@ def main():
     ap.add_argument("--out", default="eval/JUDGED-v1/judgements.jsonl")
     a = ap.parse_args()
     rng = random.Random(7)
-    rows = [json.loads(l) for l in Path(a.pool).read_text().splitlines() if l.strip()]
+    rows = [json.loads(l) for l in Path(a.pool).read_text(encoding='utf-8').splitlines() if l.strip()]
     j1, j2, judged = [], [], []
     for r in rows:
         for c in r["candidates"]:
@@ -37,7 +37,7 @@ def main():
                 g2 = truth if rng.random() > a.noise else rng.choice([0, 1, 2])
                 j1.append(g1); j2.append(g2)
     Path(a.out).parent.mkdir(parents=True, exist_ok=True)
-    with open(a.out, "w") as f:
+    with open(a.out, "w", encoding='utf-8') as f:
         for r in judged:
             f.write(json.dumps(r) + "\n")
     k = kappa(j1, j2) if j1 else float("nan")

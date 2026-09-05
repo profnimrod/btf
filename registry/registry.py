@@ -73,7 +73,7 @@ def publish(artifact: str, atype: str, parents, datasets, evals=None,
            "license": license_, "size": src.stat().st_size,
            "created": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())}
     man["signature"] = _sign(_canonical(man))
-    (MAN / f"{digest}.json").write_text(json.dumps(man, indent=2))
+    (MAN / f"{digest}.json").write_text(json.dumps(man, indent=2), encoding='utf-8')
     print(f"[registry] published {src.name} type={atype} sha256={digest[:16]}…")
     return digest
 
@@ -82,7 +82,7 @@ def fetch(digest: str, out: str | None = None, verify: bool = True) -> Path:
     man_p = MAN / f"{digest}.json"
     if not man_p.exists():
         sys.exit(f"[registry] no manifest for {digest[:16]}…")
-    man = json.loads(man_p.read_text())
+    man = json.loads(man_p.read_text(encoding='utf-8'))
     blob = OBJ / digest
     if verify:
         if sha256_file(blob) != digest:
@@ -98,7 +98,7 @@ def fetch(digest: str, out: str | None = None, verify: bool = True) -> Path:
 
 def bom(digest: str, depth=0, seen=None):
     seen = seen or set()
-    man = json.loads((MAN / f"{digest}.json").read_text())
+    man = json.loads((MAN / f"{digest}.json").read_text(encoding='utf-8'))
     print("  " * depth + f"- {man['name']} [{man['type']}] {digest[:12]}… "
           f"license={man['license']} datasets={man['datasets']}")
     for p in man["parents"]:

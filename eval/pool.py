@@ -24,7 +24,7 @@ def main():
     if a.model:
         from index.encoder import Encoder
         enc = Encoder.load(a.model, a.tok)
-    qs = [json.loads(l) for l in Path(a.queries).read_text().splitlines() if l.strip()]
+    qs = [json.loads(l) for l in Path(a.queries).read_text(encoding='utf-8').splitlines() if l.strip()]
     out = []
     for q in qs:
         pool = {}
@@ -37,7 +37,7 @@ def main():
                                     "text": r["text"][:220]}
                                    for c, r in pool.items()]})
     Path(a.out).parent.mkdir(parents=True, exist_ok=True)
-    with open(a.out, "w") as f:
+    with open(a.out, "w", encoding='utf-8') as f:
         for r in out:
             f.write(json.dumps(r) + "\n")
     avg = sum(len(r["candidates"]) for r in out) / max(len(out), 1)

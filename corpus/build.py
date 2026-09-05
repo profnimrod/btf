@@ -38,7 +38,7 @@ def decontaminate(docs, eval_dir: str):
     if evp.exists():
         for f in evp.rglob("*"):
             if f.suffix in (".jsonl", ".txt"):
-                for line in f.read_text(errors="ignore").splitlines():
+                for line in f.read_text(encoding='utf-8', errors='ignore').splitlines():
                     banned |= _shingles(line, 8)
     keep, removed = [], 0
     for src, text in docs:
@@ -64,7 +64,7 @@ def main():
         d = Path(s if "/" in s else f"data/samples/{s}")
         for f in sorted(d.rglob("*")):
             if f.suffix in (".txt", ".md"):
-                docs.append((str(f), f.read_text(errors="ignore")))
+                docs.append((str(f), f.read_text(encoding='utf-8', errors='ignore')))
     raw_n = len(docs)
     print(f"[corpus] ingested {raw_n} docs from {a.sources}")
 
@@ -84,20 +84,20 @@ def main():
         stem = Path(src).stem
         name = stem if stem not in used else f"{stem}-{len(used)}"
         used.add(name)
-        (out / "text" / f"{name}.txt").write_text(text)
+        (out / "text" / f"{name}.txt").write_text(text, encoding='utf-8')
         total_bytes += len(text.encode())
 
     attest = {"decontaminated_against": a.decontam,
               "banned_shingles": nban,
               "removed_dedup": dd, "removed_decontam": dc,
               "attested": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())}
-    (out / "ATTESTATION.json").write_text(json.dumps(attest, indent=2))
+    (out / "ATTESTATION.json").write_text(json.dumps(attest, indent=2), encoding='utf-8')
     card = {"sources": a.sources.split(","), "mix": a.mix,
             "docs_in": raw_n, "docs_out": len(docs),
             "bytes": total_bytes, "dedup_threshold": thr}
     (out / "CARD.md").write_text(
         "# Corpus card\n\n```json\n" + json.dumps(card, indent=2) + "\n```\n"
-        "\nDecontamination attestation: see ATTESTATION.json\n")
+        "\nDecontamination attestation: see ATTESTATION.json\n", encoding='utf-8')
     print(f"[corpus] wrote {len(docs)} docs, {total_bytes:,} bytes -> {out}")
     print(f"[corpus] card + attestation written (no training may start "
           f"without ATTESTATION.json)")

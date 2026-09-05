@@ -30,7 +30,7 @@ class ModelConfig:
     @staticmethod
     def from_yaml(path: str) -> "ModelConfig":
         import yaml
-        with open(path) as f:
+        with open(path, encoding='utf-8') as f:
             raw = yaml.safe_load(f)
         m = raw.get("model", raw)
         keys = ModelConfig.__dataclass_fields__
@@ -203,7 +203,7 @@ class Model(nn.Module):
 
 
 def save_config(cfg: ModelConfig, path: str):
-    with open(path, "w") as f:
+    with open(path, "w", encoding='utf-8') as f:
         json.dump(asdict(cfg), f, indent=2)
 
 

@@ -31,7 +31,7 @@ def main():
     student = Model(cfg)
     print(f"[distill] student {cfg.describe()} "
           f"({student.param_count()/1e6:.2f}M params)")
-    rows = [json.loads(l) for l in Path(a.data).read_text().splitlines() if l.strip()]
+    rows = [json.loads(l) for l in Path(a.data).read_text(encoding='utf-8').splitlines() if l.strip()]
     ex = build_examples(rows, tok, a.seq)
     opt = torch.optim.AdamW(student.parameters(), lr=a.lr)
     rng = np.random.default_rng(0)

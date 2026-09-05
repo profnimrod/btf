@@ -1,5 +1,5 @@
 Beyond the Frontier — companion repository release manifest
-release tag:        v1.2.1
+release tag:        v1.2.2
 book edition:       First edition, v1.7 (September 2026)
 lab model:          train/cfg-lab.yaml (~1.2M params, CPU)  |  reference: train/cfg-125m.yaml
 synthetic data:     data/make_synthetic.py --scale small, seed 20260826

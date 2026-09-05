@@ -30,7 +30,7 @@ def seal(bundle_dir: str, name: str, index: str | None = None) -> Path:
     man = {"name": name, "files": files, "index": index,
            "sealed": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())}
     man["signature"] = _sign(_canonical(man))
-    (bd / "MANIFEST.json").write_text(json.dumps(man, indent=2))
+    (bd / "MANIFEST.json").write_text(json.dumps(man, indent=2), encoding='utf-8')
     print(f"[bundle] sealed {name}: {len(files)} files, signed")
     return bd / "MANIFEST.json"
 
@@ -42,7 +42,7 @@ def verify(bundle_dir: str, quiet: bool = False) -> bool:
         if not quiet:
             print("[bundle] FAIL: no manifest")
         return False
-    man = json.loads(man_p.read_text())
+    man = json.loads(man_p.read_text(encoding='utf-8'))
     if not _verify(_canonical(man), man["signature"]):
         if not quiet:
             print("[bundle] FAIL: signature invalid")
@@ -66,7 +66,7 @@ def run_bit(bundle_dir: str) -> bool:
         print("[BIT] FAIL: bundle verification"); return False
     canary = Path(bundle_dir) / "bit_canaries.jsonl"
     if canary.exists():
-        rows = [json.loads(x) for x in canary.read_text().splitlines() if x.strip()]
+        rows = [json.loads(x) for x in canary.read_text(encoding='utf-8').splitlines() if x.strip()]
         for r in rows:
             # property checks are declarative; the harness fills real outputs.
             if r.get("expect") == "parses" and not r.get("parses", True):
@@ -84,7 +84,7 @@ def activate(bundle_dir: str, target_root: str):
     root = Path(target_root)
     root.mkdir(parents=True, exist_ok=True)
     ptr = root / "active"
-    cur = ptr.read_text().strip() if ptr.exists() else None
+    cur = ptr.read_text(encoding='utf-8').strip() if ptr.exists() else None
     new_slot = "B" if cur == "A" else "A"
     dst = root / f"slot_{new_slot}"
     if dst.exists():
@@ -92,7 +92,7 @@ def activate(bundle_dir: str, target_root: str):
     shutil.copytree(bundle_dir, dst)
     print(f"[deploy] staged into slot {new_slot}")
     if run_bit(str(dst)):
-        ptr.write_text(new_slot)
+        ptr.write_text(new_slot, encoding='utf-8')
         print(f"[deploy] PROMOTED slot {new_slot} (previous {cur} retained)")
         return True
     print(f"[deploy] BIT FAILED -> auto-revert; active stays {cur}")

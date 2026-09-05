@@ -32,7 +32,7 @@ def chunk_document(text: str, doc_id: str, max_words: int = 90):
 def load_corpus(src: str):
     chunks = []
     for p in sorted(Path(src).rglob("*.txt")):
-        chunks += chunk_document(p.read_text(), p.stem)
+        chunks += chunk_document(p.read_text(encoding='utf-8'), p.stem)
     return chunks
 
 

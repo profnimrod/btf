@@ -35,13 +35,13 @@ def main():
     jd = Path(a.decontam)
     if jd.exists():
         for f in jd.rglob("*.jsonl"):
-            for line in f.read_text().splitlines():
+            for line in f.read_text(encoding='utf-8').splitlines():
                 if line.strip():
                     banned |= shingles(json.loads(line)["query"], 6)
 
     rows, dropped = [], 0
     for p in sorted(Path(a.corpus).rglob("*.txt")):
-        text = p.read_text()
+        text = p.read_text(encoding='utf-8')
         first = text.split("\n")[0]
         ident = first.split(" ")[0]
         topic = first.split("—")[-1].strip() if "—" in first else first
@@ -54,7 +54,7 @@ def main():
             rows.append({"query": q, "positive": f"{first} :: {body.strip()}",
                          "doc_id": p.stem, "source": "synthetic"})
     Path(a.out).parent.mkdir(parents=True, exist_ok=True)
-    with open(a.out, "w") as f:
+    with open(a.out, "w", encoding='utf-8') as f:
         for r in rows:
             f.write(json.dumps(r) + "\n")
     Path("data/ATTESTATION-synth.json").write_text(json.dumps(

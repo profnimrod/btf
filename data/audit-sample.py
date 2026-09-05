@@ -17,9 +17,9 @@ def main():
     ap.add_argument("--out", default="data/audit-sample.jsonl")
     a = ap.parse_args()
     need = a.n or audit_n(a.defect, a.conf)
-    rows = [l for l in Path(a.data).read_text().splitlines() if l.strip()]
+    rows = [l for l in Path(a.data).read_text(encoding='utf-8').splitlines() if l.strip()]
     sample = random.Random(0).sample(rows, min(need, len(rows)))
-    Path(a.out).write_text("\n".join(sample) + "\n")
+    Path(a.out).write_text("\n".join(sample) + "\n", encoding='utf-8')
     print(f"[audit] required n={need} for {a.defect:.0%} defect @ {a.conf:.0%} "
           f"confidence; drew {len(sample)} of {len(rows)} -> {a.out}")
     print("[audit] read every drawn record by hand; a failed batch stops the "

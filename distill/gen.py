@@ -23,7 +23,7 @@ def main():
     a = ap.parse_args()
     m, tok = load(a.teacher, a.tok)
     rows, kept, dropped = [], 0, 0
-    src = [json.loads(l) for l in Path(a.queries).read_text().splitlines() if l.strip()]
+    src = [json.loads(l) for l in Path(a.queries).read_text(encoding='utf-8').splitlines() if l.strip()]
     for r in src[:a.n]:
         gen = answer(m, tok, r["query"], max_new=32, temperature=a.temperature)
         if len(gen.split()) < 3:
@@ -33,7 +33,7 @@ def main():
                                   {"role": "assistant", "content": gen}],
                      "tier": "routine"})
         kept += 1
-    lb = [json.loads(l) for l in Path(a.lb_prompts).read_text().splitlines() if l.strip()]
+    lb = [json.loads(l) for l in Path(a.lb_prompts).read_text(encoding='utf-8').splitlines() if l.strip()]
     for s in lb:
         sc = s["scenario"]
         q = (f"Recommend a MODCOD and report margin. EIRP {sc['eirp_dbw']} dBW, "
@@ -51,7 +51,7 @@ def main():
         kept += 1
     rows.sort(key=lambda r: 0 if r["tier"] == "routine" else 1)  # curriculum
     Path(a.out).parent.mkdir(parents=True, exist_ok=True)
-    with open(a.out, "w") as f:
+    with open(a.out, "w", encoding='utf-8') as f:
         for r in rows:
             f.write(json.dumps(r) + "\n")
     print(f"[distill-gen] kept {kept}, dropped {dropped} on filter "

@@ -19,5 +19,5 @@ if __name__ == "__main__":
         shutil.copy(a.scaffold, out / Path(a.scaffold).name)
     (out / "bit_canaries.jsonl").write_text(
         '{"id":"c1","expect":"parses","parses":true}\n'
-        '{"id":"c2","expect":"parses","parses":true}\n')
+        '{"id":"c2","expect":"parses","parses":true}\n', encoding='utf-8')
     seal(str(out), out.name, a.index)

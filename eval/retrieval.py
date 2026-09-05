@@ -20,7 +20,7 @@ def ndcg(hits, k):
 
 def evaluate(index_path, queries_path, enc=None, k=10, mode="hybrid"):
     idx = Index.load(index_path)
-    qs = [json.loads(l) for l in Path(queries_path).read_text().splitlines() if l.strip()]
+    qs = [json.loads(l) for l in Path(queries_path).read_text(encoding='utf-8').splitlines() if l.strip()]
     rec, nd, per_item = 0, 0.0, []
     for q in qs:
         res = idx.search(q["query"], enc=enc, k=k, mode=mode)
@@ -52,7 +52,7 @@ def main():
     print(f"[retrieval] mode={a.mode} {m}")
     if a.save:
         Path(a.save).parent.mkdir(parents=True, exist_ok=True)
-        Path(a.save).write_text(json.dumps({"metrics": m, "per_item": per_item}))
+        Path(a.save).write_text(json.dumps({"metrics": m, "per_item": per_item}), encoding='utf-8')
 
 
 if __name__ == "__main__":

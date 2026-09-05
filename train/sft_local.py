@@ -77,7 +77,7 @@ def main():
         params = list(model.parameters())
         print(f"[sft] full fine-tune; {sum(p.numel() for p in params):,} params")
 
-    rows = [json.loads(l) for l in Path(a.data).read_text().splitlines() if l.strip()]
+    rows = [json.loads(l) for l in Path(a.data).read_text(encoding='utf-8').splitlines() if l.strip()]
     if a.oversample:
         sub, factor = a.oversample.rsplit(":", 1)
         extra = [r for r in rows

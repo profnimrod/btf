@@ -32,7 +32,7 @@ REGIMES = ["eclipse entry", "eclipse exit", "full sun", "station keeping",
 
 def w(path: Path, text: str):
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(text)
+    path.write_text(text, encoding='utf-8')
 
 
 def gen_standards(rng, out, n):
@@ -281,12 +281,12 @@ def main():
 
     jd = Path("eval/JUDGED-v1")
     jd.mkdir(parents=True, exist_ok=True)
-    with (jd / "queries.jsonl").open("w") as f:
+    with (jd / "queries.jsonl").open("w", encoding='utf-8') as f:
         for doc_id, q, ans in eval_facts:
             f.write(json.dumps({"query": q, "gold": doc_id, "answer": ans}) + "\n")
 
     # Q&A history: query-style pairs the miner will pick up (never eval docs)
-    with open("data/qa-history.jsonl", "w") as f:
+    with open("data/qa-history.jsonl", "w", encoding='utf-8') as f:
         for doc_id, q, ans in train_facts:
             for ph in phrasings(q, doc_id):
                 f.write(json.dumps({"query": ph, "doc_id": doc_id,
@@ -315,14 +315,14 @@ def main():
                 f"MODCOD {rng.choice(MODCODS[:5])} margin "
                 f"{rng.uniform(0.5, 4):.1f} dB (source: {s['id']})"}]})
     rng.shuffle(rows)
-    with (sft / "train.jsonl").open("w") as f:
+    with (sft / "train.jsonl").open("w", encoding='utf-8') as f:
         for r in rows:
             f.write(json.dumps(r) + "\n")
 
     # ---- preference pairs: chosen cites and hedges; rejected overclaims
     pref = Path("data/pref-v1")
     pref.mkdir(parents=True, exist_ok=True)
-    with (pref / "train.jsonl").open("w") as f:
+    with (pref / "train.jsonl").open("w", encoding='utf-8') as f:
         for doc_id, q, ans in train_facts:
             f.write(json.dumps({
                 "prompt": q,
@@ -334,7 +334,7 @@ def main():
                 ])}) + "\n")
 
     # ---- GRPO scenarios
-    with open("data/lb-prompts.jsonl", "w") as f:
+    with open("data/lb-prompts.jsonl", "w", encoding='utf-8') as f:
         for s in scenarios:
             f.write(json.dumps(s) + "\n")
 
@@ -346,8 +346,8 @@ def main():
                      "frame synchroniser", "MODCOD step-down", "slant range",
                      "carrier-to-noise density", "uplink power control",
                      "adjacent-satellite interference", "rain fade"]})
-    Path("eval/domain-terms.txt").write_text("\n".join(terms) + "\n")
-    with open("eval/canary-prompts.jsonl", "w") as f:
+    Path("eval/domain-terms.txt").write_text("\n".join(terms) + "\n", encoding='utf-8')
+    with open("eval/canary-prompts.jsonl", "w", encoding='utf-8') as f:
         for p in ["The link budget", "MODCOD step-down", "PROC-201 states",
                   "Telemetry channel"]:
             f.write(json.dumps({"prompt": p}) + "\n")

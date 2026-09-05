@@ -15,7 +15,7 @@ def main():
               "report_drafting", "link_budget"}
     rows = []
     for f in sorted(Path(a.reports).glob("*.json")):
-        d = json.loads(f.read_text())
+        d = json.loads(f.read_text(encoding='utf-8'))
         if not SUITES.issubset(d.keys()):
             continue          # not a model scorecard (retrieval/bins reports)
         score = d.get(a.metric)

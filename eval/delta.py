@@ -26,13 +26,13 @@ def main():
         print(f"[delta] no report for parent at {pf}; run the harness first.")
         print("[delta] (this is the plan view — real deltas need eval reports)")
         return
-    parent = json.loads(pf.read_text())
+    parent = json.loads(pf.read_text(encoding='utf-8'))
     any_fail = False
     for child in filter(None, a.children.split(",")):
         cf = rep / f"{Path(child).name}.json"
         if not cf.exists():
             print(f"[delta] missing report {cf}"); continue
-        c = json.loads(cf.read_text())
+        c = json.loads(cf.read_text(encoding='utf-8'))
         print(f"\n  {child}")
         for s in GATES:
             d = c.get(s, 0) - parent.get(s, 0)

@@ -50,7 +50,7 @@ def main():
     params = trainable(policy) or list(policy.parameters())
     opt = torch.optim.AdamW(params, lr=a.lr)
 
-    rows = [json.loads(l) for l in Path(a.pairs).read_text().splitlines() if l.strip()]
+    rows = [json.loads(l) for l in Path(a.pairs).read_text(encoding='utf-8').splitlines() if l.strip()]
     rows = rows[:a.limit]
     print(f"[dpo] beta={a.beta} pairs={len(rows)}")
     for ep in range(a.epochs):

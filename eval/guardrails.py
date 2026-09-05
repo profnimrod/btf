@@ -55,7 +55,7 @@ def main():
           "both-direction discipline is visible (Ch. 15).")
     if a.save:
         Path(a.save).parent.mkdir(parents=True, exist_ok=True)
-        Path(a.save).write_text(json.dumps(res, indent=2))
+        Path(a.save).write_text(json.dumps(res, indent=2), encoding='utf-8')
 
 
 if __name__ == "__main__":

@@ -19,7 +19,7 @@ def main():
     perm = 256 if a.semantic >= 0.9 else 64
     lsh = MinHashLSH(threshold=a.semantic, num_perm=perm)
     for path in a.inputs:
-        for line in Path(path).read_text().splitlines():
+        for line in Path(path).read_text(encoding='utf-8').splitlines():
             if not line.strip():
                 continue
             r = json.loads(line)
@@ -37,7 +37,7 @@ def main():
             seen.add(k)
             rows.append(r)
     Path(a.out).parent.mkdir(parents=True, exist_ok=True)
-    with open(a.out, "w") as f:
+    with open(a.out, "w", encoding='utf-8') as f:
         for r in rows:
             f.write(json.dumps(r) + "\n")
     print(f"[dedup] kept {len(rows)}, dropped {dropped}")

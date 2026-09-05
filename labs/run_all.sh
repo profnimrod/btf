@@ -7,6 +7,7 @@
 # Each stage prints the numbers docs/EXPECTED.md tells you to expect.
 set -euo pipefail
 cd "$(dirname "$0")/.."
+export PYTHONUTF8=1 PYTHONIOENCODING=utf-8   # Windows: force UTF-8 text I/O
 
 PROFILE="${1:-full}"
 if [ "$PROFILE" = "--smoke" ]; then

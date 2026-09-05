@@ -39,7 +39,7 @@ def main():
     a.bits, a.group = bits, group
     print(f"[qat] master={src} fake-quant=int{bits} group={group}")
     model, tok = load(src, a.tok)
-    rows = [json.loads(l) for l in Path(a.data).read_text().splitlines() if l.strip()]
+    rows = [json.loads(l) for l in Path(a.data).read_text(encoding='utf-8').splitlines() if l.strip()]
     focus = [r for r in rows if a.focus.lower() in json.dumps(r).lower()] or rows
     ex = build_examples(focus, tok, a.seq)
     print(f"[qat] repairing on {len(ex)} '{a.focus}' examples, quantizer live")

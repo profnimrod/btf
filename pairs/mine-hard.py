@@ -21,7 +21,7 @@ def main():
     ap.add_argument("--out", required=True)
     a = ap.parse_args()
 
-    rows = [json.loads(l) for l in Path(a.pairs).read_text().splitlines() if l.strip()]
+    rows = [json.loads(l) for l in Path(a.pairs).read_text(encoding='utf-8').splitlines() if l.strip()]
     enc = Encoder.load(a.model, a.tok)
     corpus = [r["positive"] for r in rows]
     dv = enc.encode(corpus)
@@ -45,7 +45,7 @@ def main():
             negs[r["query"]] = cand
             kept += 1
     Path(a.out).parent.mkdir(parents=True, exist_ok=True)
-    Path(a.out).write_text(json.dumps(negs))
+    Path(a.out).write_text(json.dumps(negs), encoding='utf-8')
     print(f"[mine-hard] negatives for {kept}/{len(rows)} queries; "
           f"{filtered} candidates rejected by margin filter "
           f"({'denoise on' if a.denoise else 'denoise off'})")

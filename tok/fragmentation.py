@@ -17,7 +17,7 @@ def main():
     ap.add_argument("--ref", default=None)
     ap.add_argument("--terms", required=True)
     a = ap.parse_args()
-    terms = [x.strip() for x in Path(a.terms).read_text().splitlines() if x.strip()]
+    terms = [x.strip() for x in Path(a.terms).read_text(encoding='utf-8').splitlines() if x.strip()]
     print(f"[frag] {a.tok}: {frag(a.tok, terms):.3f} tokens/term")
     if a.ref:
         print(f"[frag] {a.ref}: {frag(a.ref, terms):.3f} tokens/term")

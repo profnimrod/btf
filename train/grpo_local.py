@@ -47,7 +47,7 @@ def main():
     policy, tok = load(a.base, a.tok)
     params = trainable(policy) or list(policy.parameters())
     opt = torch.optim.AdamW(params, lr=a.lr)
-    scen = [json.loads(l) for l in Path(a.prompts).read_text().splitlines() if l.strip()]
+    scen = [json.loads(l) for l in Path(a.prompts).read_text(encoding='utf-8').splitlines() if l.strip()]
     rng = np.random.default_rng(0)
     history, transcripts = [], []
 

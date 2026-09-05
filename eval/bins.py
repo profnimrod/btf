@@ -27,7 +27,7 @@ def main():
         enc = Encoder.load(a.model, a.tok)
     idx = Index.load(a.index)
     docs = {c["doc_id"] for c in idx.chunks}
-    qs = [json.loads(l) for l in Path(a.queries).read_text().splitlines() if l.strip()]
+    qs = [json.loads(l) for l in Path(a.queries).read_text(encoding='utf-8').splitlines() if l.strip()]
     counts = Counter()
     for q in qs:
         if q["gold"] not in docs:

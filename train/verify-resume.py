@@ -29,7 +29,7 @@ def main():
     a = ap.parse_args()
 
     import yaml
-    tr = yaml.safe_load(open(a.config)).get("train", {})
+    tr = yaml.safe_load(open(a.config, encoding='utf-8')).get("train", {})
     state = torch.load(a.ckpt, map_location=a.device, weights_only=False)
     cfg = ModelConfig(**state["cfg"])
     torch.set_num_threads(1)
@@ -41,7 +41,7 @@ def main():
     opt.load_state_dict(state["opt"])
     step0 = state["step"]
 
-    meta = json.loads((Path(a.data) / "meta.json").read_text())
+    meta = json.loads((Path(a.data) / "meta.json").read_text(encoding='utf-8'))
     data = np.memmap(Path(a.data) / "train.bin",
                      dtype=np.dtype(meta["dtype"]), mode="r")
     seq = a.seq_len or tr.get("seq_len", cfg.context)
@@ -50,7 +50,7 @@ def main():
     win = Windows(len(data), seq, micro * accum, tr.get("seed", 1337))
 
     ref = {}
-    for line in Path(a.log).read_text().splitlines():
+    for line in Path(a.log).read_text(encoding='utf-8').splitlines():
         r = json.loads(line)
         ref[r["step"]] = r
     total_ref = max(ref)

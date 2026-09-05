@@ -90,7 +90,7 @@ def test_registry_sign_verify_and_tamper(tmp_path):
     reg.ROOT = tmp_path / "store"
     reg.OBJ, reg.MAN, reg.KEYS = (reg.ROOT / "objects", reg.ROOT / "manifests",
                                   reg.ROOT / "keys")
-    art = tmp_path / "m.bin"; art.write_text("weights")
+    art = tmp_path / "m.bin"; art.write_text("weights", encoding='utf-8')
     digest = reg.publish(str(art), "model", [], ["ds-v1"])
     assert reg.fetch(digest, verify=True).exists()
     # tamper the stored object -> verify must raise SystemExit
@@ -104,21 +104,21 @@ def test_registry_sign_verify_and_tamper(tmp_path):
 def test_bundle_bit_and_rollback(tmp_path):
     import bundle.bundle as b
     good = tmp_path / "good"; good.mkdir()
-    (good / "model.gguf").write_text("w")
+    (good / "model.gguf").write_text("w", encoding='utf-8')
     (good / "bit_canaries.jsonl").write_text(
-        '{"id":"c","expect":"parses","parses":true}\n')
+        '{"id":"c","expect":"parses","parses":true}\n', encoding='utf-8')
     b.seal(str(good), "good-v1")
     fleet = tmp_path / "fleet"
     assert b.activate(str(good), str(fleet)) is True
-    active = (fleet / "active").read_text()
+    active = (fleet / "active").read_text(encoding='utf-8')
     # a failing-BIT bundle must not change the active slot
     bad = tmp_path / "bad"; bad.mkdir()
-    (bad / "model.gguf").write_text("w")
+    (bad / "model.gguf").write_text("w", encoding='utf-8')
     (bad / "bit_canaries.jsonl").write_text(
-        '{"id":"c","expect":"refuses","refuses":false}\n')
+        '{"id":"c","expect":"refuses","refuses":false}\n', encoding='utf-8')
     b.seal(str(bad), "bad-v2")
     assert b.activate(str(bad), str(fleet)) is False
-    assert (fleet / "active").read_text() == active
+    assert (fleet / "active").read_text(encoding='utf-8') == active
 
 
 def test_lora_merge_is_lossless():
@@ -174,7 +174,7 @@ def test_link_budget_rewards_efficiency_and_penalises_overclaim():
 def test_book_json_samples_parse():
     """Every machine-readable sample printed in the book must be valid JSON."""
     import json
-    for line in (ROOT / "data/schema-example.jsonl").read_text().splitlines():
+    for line in (ROOT / "data/schema-example.jsonl").read_text(encoding='utf-8').splitlines():
         if line.strip():
             rec = json.loads(line)
             assert {"messages", "source", "markings"} <= rec.keys()
@@ -186,7 +186,7 @@ def test_tokenizer_compat_preflight_detects_mismatch(tmp_path):
         t = Tokenizer(models.BPE(unk_token="<unk>"))
         t.pre_tokenizer = pre_tokenizers.ByteLevel(add_prefix_space=True)
         words = "alpha beta gamma delta" if out == "a" else "omega sigma theta lambda"
-        f = tmp_path / f"{out}.txt"; f.write_text((words + " ") * 20)
+        f = tmp_path / f"{out}.txt"; f.write_text((words + " ") * 20, encoding='utf-8')
         t.train([str(f)], trainers.BpeTrainer(vocab_size=vocab, special_tokens=["<unk>"], show_progress=False))
         d = tmp_path / out; d.mkdir(); t.save(str(d / "tokenizer.json")); return d
     a, b = make(80, "a"), make(90, "b")

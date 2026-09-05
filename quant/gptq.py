@@ -34,7 +34,7 @@ def native(a):
     if n_merged:
         print(f'[quant] merged {n_merged} LoRA projections into the base weights first (Ch. 14)')
     calib = [json.loads(l) for l in
-             Path(a.calib, "calib.jsonl").read_text().splitlines() if l.strip()]
+             Path(a.calib, "calib.jsonl").read_text(encoding='utf-8').splitlines() if l.strip()]
     ids = [torch.tensor([tok.encode(c["text"]).ids[:128]]) for c in calib[:16]]
     ids = [i for i in ids if i.shape[1] > 4]
     n = quantize_model(model, bits=a.bits, group=a.group, method="gptq")

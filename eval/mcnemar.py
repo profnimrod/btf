@@ -8,7 +8,7 @@ from eval.stats import mcnemar, paired_bootstrap  # noqa: E402
 
 
 def load_items(p):
-    d = json.loads(Path(p).read_text())
+    d = json.loads(Path(p).read_text(encoding='utf-8'))
     return d["per_item"] if isinstance(d, dict) and "per_item" in d else d
 
 
