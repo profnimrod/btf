@@ -3,12 +3,13 @@ libraries, and (for GPU labs) device availability."""
 from __future__ import annotations
 import argparse, importlib, sys
 
-CPU_CORE = ["numpy", "yaml", "tokenizers", "datasketch", "cryptography"]
+CPU_CORE = ["numpy", "yaml", "tokenizers", "datasketch", "cryptography",
+            "torch", "rank_bm25", "gguf"]   # everything labs/run_all.py imports
 LAB_EXTRA = {
     "B": ["torch"],
     "C": ["torch", "transformers", "peft", "trl"],
     "D": ["torch", "sentence_transformers", "faiss", "sklearn"],
-    "E": ["torch", "transformers"],
+    "E": ["torch", "transformers", "gguf"],
 }
 
 

@@ -5,21 +5,23 @@ executable companion; every command below runs on a laptop CPU against the
 synthetic corpus.
 
 ## Prerequisites
+`python` means your Python 3.12 interpreter (`python3` on Linux/macOS, `py -3.12` on Windows); see the README's platform notes.
+
 ```bash
 pip install -r env/requirements-cpu.txt
-python3 tests/env_check.py --lab E
-python3 data/make_synthetic.py --scale small     # once, for all labs
+python tests/env_check.py --lab E
+python data/make_synthetic.py --scale small     # once, for all labs
 ```
 
 ## Commands
 ```bash
-python3 calib/build.py --out calib/v1
-python3 quant/merge.py --adapter ckpt/grpo-adapter.pt --out ckpt/merged.pt
-python3 quant/awq.py --native --model ckpt/merged.pt --calib calib/v1 --bits 4 --out ckpt/awq-int4.pt
-python3 eval/delta.py --parent parent --children awq-int4,gptq-int4 --gates
-python3 export/gguf.py --model ckpt/awq-int4.pt --out gguf/asst-q4.gguf
-python3 bundle/seal.py --model ckpt/awq-int4.pt --index run/index/v1-pq --out bundle/ops-edge-v1
-bash deploy/stage.sh --target run/fleet bundle/ops-edge-v1
+python calib/build.py --out calib/v1
+python quant/merge.py --adapter ckpt/grpo-adapter.pt --out ckpt/merged.pt
+python quant/awq.py --native --model ckpt/merged.pt --calib calib/v1 --bits 4 --out ckpt/awq-int4.pt
+python eval/delta.py --parent parent --children awq-int4,gptq-int4 --gates
+python export/gguf.py --model ckpt/awq-int4.pt --out gguf/asst-q4.gguf
+python bundle/seal.py --model ckpt/awq-int4.pt --index run/index/v1-pq --out bundle/ops-edge-v1
+python deploy/stage.py --target run/fleet bundle/ops-edge-v1
 ```
 
 ## What to expect

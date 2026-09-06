@@ -5,22 +5,24 @@ executable companion; every command below runs on a laptop CPU against the
 synthetic corpus.
 
 ## Prerequisites
+`python` means your Python 3.12 interpreter (`python3` on Linux/macOS, `py -3.12` on Windows); see the README's platform notes.
+
 ```bash
 pip install -r env/requirements-cpu.txt
-python3 tests/env_check.py --lab D
-python3 data/make_synthetic.py --scale small     # once, for all labs
+python tests/env_check.py --lab D
+python data/make_synthetic.py --scale small     # once, for all labs
 ```
 
 ## Commands
 ```bash
-python3 pairs/mine.py --corpus corpus/v1/text --out data/pairs-mined.jsonl
-python3 pairs/dedup.py data/pairs-*.jsonl --semantic 0.95 --out data/pairs-v1.jsonl
-python3 train/embedder.py --pairs data/pairs-v1.jsonl --batch 32 --epochs 8 --out ckpt/emb-r1.pt
-python3 pairs/mine-hard.py --model ckpt/emb-r1.pt --pairs data/pairs-v1.jsonl \
+python pairs/mine.py --corpus corpus/v1/text --out data/pairs-mined.jsonl
+python pairs/dedup.py data/pairs-*.jsonl --semantic 0.95 --out data/pairs-v1.jsonl
+python train/embedder.py --pairs data/pairs-v1.jsonl --batch 32 --epochs 8 --out ckpt/emb-r1.pt
+python pairs/mine-hard.py --model ckpt/emb-r1.pt --pairs data/pairs-v1.jsonl \
     --margin-filter --out data/hard-negs.json
-python3 train/embedder.py --base ckpt/emb-r1.pt --pairs data/pairs-v1.jsonl \
+python train/embedder.py --base ckpt/emb-r1.pt --pairs data/pairs-v1.jsonl \
     --hard-negs data/hard-negs.json --epochs 3 --out ckpt/emb-r2.pt
-python3 eval/retrieval.py --index run/index/v1 --model ckpt/emb-r2.pt --mode hybrid
+python eval/retrieval.py --index run/index/v1 --model ckpt/emb-r2.pt --mode hybrid
 ```
 
 ## What to expect

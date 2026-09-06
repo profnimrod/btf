@@ -5,19 +5,21 @@ executable companion; every command below runs on a laptop CPU against the
 synthetic corpus.
 
 ## Prerequisites
+`python` means your Python 3.12 interpreter (`python3` on Linux/macOS, `py -3.12` on Windows); see the README's platform notes.
+
 ```bash
 pip install -r env/requirements-cpu.txt
-python3 tests/env_check.py --lab B
-python3 data/make_synthetic.py --scale small     # once, for all labs
+python tests/env_check.py --lab B
+python data/make_synthetic.py --scale small     # once, for all labs
 ```
 
 ## Commands
 ```bash
-python3 train/pretrain.py --config train/cfg-lab.yaml --data corpus/v1 \
+python train/pretrain.py --config train/cfg-lab.yaml --data corpus/v1 \
     --max-steps 1200 --ckpt-dir ckpt/lab --device cpu --log logs/lab.jsonl
-python3 train/verify-resume.py --ckpt ckpt/lab/step00000600.pt \
+python train/verify-resume.py --ckpt ckpt/lab/step00000600.pt \
     --config train/cfg-lab.yaml --data corpus/v1 --log logs/lab.jsonl
-python3 eval/bpb.py --ckpt ckpt/lab/step00001200.pt --tok tok/domain-32k --text /tmp/heldout
+python eval/bpb.py --ckpt ckpt/lab/step00001200.pt --tok tok/domain-32k --text /tmp/heldout
 ```
 
 ## What to expect

@@ -1,9 +1,9 @@
 # Expected results (CPU, synthetic corpus, seed 20260826)
 
-**Two ways to run.** `bash labs/run_all.sh --smoke` exercises every command in
+**Two ways to run.** `python labs/run_all.py --smoke` exercises every command in
 about five minutes as an environment and wiring check — its *numbers are
 meaningless* (the model barely trains), and stages legitimately report 0.0.
-`bash labs/run_all.sh` is the real run; the table below is that run.
+`python labs/run_all.py` is the real run; the table below is that run.
 
 Measured on a single CPU core. Your numbers will differ slightly with
 threading and library versions; the **shape** is the contract, not the

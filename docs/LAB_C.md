@@ -5,20 +5,22 @@ executable companion; every command below runs on a laptop CPU against the
 synthetic corpus.
 
 ## Prerequisites
+`python` means your Python 3.12 interpreter (`python3` on Linux/macOS, `py -3.12` on Windows); see the README's platform notes.
+
 ```bash
 pip install -r env/requirements-cpu.txt
-python3 tests/env_check.py --lab C
-python3 data/make_synthetic.py --scale small     # once, for all labs
+python tests/env_check.py --lab C
+python data/make_synthetic.py --scale small     # once, for all labs
 ```
 
 ## Commands
 ```bash
-python3 tests/template_parity.py --tokenizer tok/domain-32k
-python3 tests/packing_inspect.py
-python3 train/sft_local.py --base ckpt/lab/step00001200.pt --lora-r 16 --epochs 6 \
+python tests/template_parity.py --tokenizer tok/domain-32k
+python tests/packing_inspect.py
+python train/sft_local.py --base ckpt/lab/step00001200.pt --lora-r 16 --epochs 6 \
     --lr 2e-3 --oversample "Recommend a MODCOD:6" --out ckpt/sft-adapter.pt
-python3 train/dpo_local.py --base ckpt/sft-adapter.pt --beta 0.1 --out ckpt/dpo-adapter.pt
-python3 train/grpo_local.py --base ckpt/dpo-adapter.pt --iters 40 --temperature 0.7 \
+python train/dpo_local.py --base ckpt/sft-adapter.pt --beta 0.1 --out ckpt/dpo-adapter.pt
+python train/grpo_local.py --base ckpt/dpo-adapter.pt --iters 40 --temperature 0.7 \
     --out ckpt/grpo-adapter.pt
 ```
 

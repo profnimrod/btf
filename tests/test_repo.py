@@ -194,3 +194,25 @@ def test_tokenizer_compat_preflight_detects_mismatch(tmp_path):
     same = subprocess.run([sys.executable, str(ROOT / "tests/tokenizer_compat.py"), "--draft", str(a), "--target", str(a)])
     diff = subprocess.run([sys.executable, str(ROOT / "tests/tokenizer_compat.py"), "--draft", str(a), "--target", str(b)])
     assert same.returncode == 0 and diff.returncode == 1
+
+
+def test_every_import_is_pinned():
+    """Guards against environment drift: a module that imports cleanly on the
+    author's machine but is missing from the lockfile (the gguf incident)."""
+    import re, sys, glob
+    stdlib = set(sys.stdlib_module_names)
+    local = {p.name for p in ROOT.iterdir() if p.is_dir()}
+    dist = {"yaml": "pyyaml", "rank_bm25": "rank-bm25", "sklearn": "scikit-learn",
+            "faiss": "faiss-cpu", "awq": "autoawq", "sentence_transformers": "sentence-transformers"}
+    gpu_only = {"transformers", "peft", "trl", "awq", "sentence_transformers", "vllm"}
+    cpu = (ROOT / "env/requirements-cpu.txt").read_text(encoding="utf-8").lower()
+    lock = (ROOT / "env/requirements.lock").read_text(encoding="utf-8").lower()
+    mods = set()
+    for f in glob.glob(str(ROOT / "**/*.py"), recursive=True):
+        src = open(f, encoding="utf-8").read()
+        mods |= set(re.findall(r"^\s*(?:import|from)\s+([a-zA-Z_]\w*)", src, re.M))
+    third = {m for m in mods if m not in stdlib and m not in local}
+    for m in third:
+        name = dist.get(m, m).lower()
+        target = lock if m in gpu_only else cpu
+        assert name in target, f"{m} ({name}) is imported but not pinned in the {'lock' if m in gpu_only else 'CPU requirements'}"

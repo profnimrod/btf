@@ -32,6 +32,38 @@ a GPU**, and nothing is faked in between:
   pinned HF/TRL/autoawq stack (`env/requirements.lock`). `--plan` on those
   wrappers prints the exact configuration without a card.
 
+## Platform notes (read first)
+
+Everything runs on **Windows, Linux, and macOS** with **Python 3.12** (3.11 untested; 3.13 lacks
+some pinned wheels). In the commands below, `python` means your 3.12 interpreter — `python3` on
+Linux/macOS, `py -3.12` or `python` on Windows. Use a virtual environment:
+
+```powershell
+# Windows (PowerShell)
+py -3.12 -m venv .venv
+.venv\Scripts\Activate.ps1
+pip install -r env\requirements-cpu.txt
+python tests\env_check.py
+python labs\run_all.py --smoke
+```
+
+```bash
+# Linux / macOS
+python -m venv .venv
+source .venv/bin/activate
+pip install -r env/requirements-cpu.txt
+python tests/env_check.py
+python labs/run_all.py --smoke
+```
+
+The `.sh` scripts (`labs/run_all.sh`, `bench/soak.sh`, `deploy/stage.sh`) are thin wrappers around
+the Python equivalents (`labs/run_all.py`, `bench/soak.py`, `deploy/stage.py`) for readers who prefer
+bash; on Windows they need Git Bash or WSL, or just call the `.py` file directly. All text I/O is
+explicitly UTF-8, and `.gitattributes` keeps line endings LF on checkout.
+
+GPU stages on Windows: install a CUDA-enabled PyTorch from the official PyTorch index for your CUDA
+version before the pinned stack; the default PyPI `torch` wheel on Windows is CPU-only.
+
 ## Quickstart (laptop, no GPU)
 
 **Everything below runs end to end on one CPU core with the bundled synthetic
@@ -39,9 +71,9 @@ corpus — no downloads, no GPU, no data hunt.**
 
 ```bash
 pip install -r env/requirements-cpu.txt
-python3 data/make_synthetic.py --scale small   # 217-document proxy corpus
-bash labs/run_all.sh --smoke                   # 5-min wiring check first
-bash labs/run_all.sh                           # all four labs, ~30-60 min
+python data/make_synthetic.py --scale small   # 217-document proxy corpus
+python labs/run_all.py --smoke                 # 5-min wiring check first
+python labs/run_all.py                         # all four labs, ~30-60 min
 ```
 
 `docs/EXPECTED.md` lists the reference numbers for every stage.

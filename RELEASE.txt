@@ -1,11 +1,11 @@
 Beyond the Frontier — companion repository release manifest
-release tag:        v1.2.2
-book edition:       First edition, v1.7 (September 2026)
+release tag:        v1.2.3
+book edition:       First edition, v1.7.4 (September 2026)
 lab model:          train/cfg-lab.yaml (~1.2M params, CPU)  |  reference: train/cfg-125m.yaml
 synthetic data:     data/make_synthetic.py --scale small, seed 20260826
 environment:        env/requirements.lock (sole installation source); env/requirements-cpu.txt
 llama.cpp:          env/llama_cpp.pin (immutable tag)
 quantization:       llmcompressor (AWQ/GPTQ, 8B-class); quant/quantize.py (lab scale)
 evaluation harness: eval/harness.py, eval/stats.py — see docs/EXPECTED.md for measured lab-scale results
-verification:       python -m pytest tests/test_repo.py ; bash labs/run_all.sh --smoke
+verification:       python -m pytest tests/test_repo.py ; python labs/run_all.py --smoke   (Windows/Linux/macOS)
 The release archive's SHA-256 is published alongside the download and printed in Appendix F of the book.

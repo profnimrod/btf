@@ -1,6 +1,14 @@
+v1.2.3 (6 Sep 2026) - cross-platform release
+- labs/run_all.py: cross-platform orchestrator (Windows/Linux/macOS), resumable with --from; the .sh scripts delegate to it
+- bench/soak.py and deploy/stage.py: Python equivalents of the bash tools
+- .gitattributes: LF line endings enforced so scripts survive a Windows checkout
+- gguf pinned in both requirement files (was missing); tests/env_check.py verifies every module the lab suite imports; regression test asserts every third-party import is pinned
+- README: platform notes with PowerShell and bash venv recipes; docs use `python`, not `python3`
+- quant/merge.py --adapters sft,dpo,grpo; Lab E artifact chain and deployment branches documented
+
 v1.2.2 (6 Sep 2026) - Windows compatibility
-- all text file I/O is explicitly UTF-8 (41 modules); fixes "stream did not contain valid UTF-8" from tok/train.py on Windows
-- labs/run_all.sh exports PYTHONUTF8=1 for Windows shells
+- all text file I/O explicitly UTF-8 (fixes tok/train.py "stream did not contain valid UTF-8" on Windows)
+
 v1.2.1 (5 Sep 2026) — book v1.7 release
 - quant/merge.py --adapters sft,dpo,grpo: merge the final aligned stack (each adapter bound to its base)
 - Lab E artifact chain: QAT writes the bf16 master only (ckpt/qat-master); packing at export; the packed GGUF is what is gated
